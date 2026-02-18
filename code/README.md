@@ -10,7 +10,7 @@ This folder contains a modular PySpark solution for the assessment:
 
 ## Structure
 
-`src/nyc_jobs/`
+`nyc_jobs/`
 - `config.py`: project constants and paths
 - `spark.py`: Spark session factory
 - `io.py`: read/write helpers
@@ -36,7 +36,7 @@ pytest tests -q
 With docker compose stack running, execute from container:
 
 ```powershell
-docker exec -it jupyter bash -lc "cd /app && python run_pipeline.py --cluster"
+docker exec -it jupyter bash -lc "cd /app && /opt/spark/bin/spark-submit run_pipeline.py"
 docker exec -it jupyter bash -lc "cd /app && pytest tests -q"
 ```
 
