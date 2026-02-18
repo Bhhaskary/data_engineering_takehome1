@@ -90,3 +90,23 @@ We will review your work.
 
 # Happy Coding!!
 
+---
+
+## Candidate solution structure
+
+Implemented solution files:
+
+- `code/nyc_jobs/`: modular PySpark logic
+- `code/run_pipeline.py`: pipeline entrypoint
+- `code/tests/`: unit tests
+- `MyDocument.md`: assumptions, challenges, KPI/feature engineering details
+
+### Quick run
+
+```powershell
+cd code
+python -m pip install -r requirements.txt
+python run_pipeline.py
+pytest tests -q
+```
+
