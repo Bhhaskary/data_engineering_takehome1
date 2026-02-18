@@ -1,8 +1,17 @@
 # MyDocument
 
-## Solution approach
+## Executive summary
 
-I implemented the assessment as a modular PySpark pipeline under `code/nyc_jobs/` with clear responsibility boundaries:
+This solution implements the NYC jobs assessment as a modular PySpark pipeline with:
+- reproducible data processing and feature engineering
+- KPI computation as reusable functions
+- automated output generation (CSV, Parquet, charts)
+- unit tests for core logic
+- documentation for assumptions, tradeoffs, and deployment approach
+
+## Solution architecture
+
+The implementation is organized under `code/nyc_jobs/` with clear boundaries:
 
 - `cleaning.py`: schema normalization and salary annualization
 - `features.py`: feature engineering
@@ -11,7 +20,7 @@ I implemented the assessment as a modular PySpark pipeline under `code/nyc_jobs/
 - `visualization.py`: chart generation
 - `pipeline.py`: orchestration and output persistence
 
-## Data exploration performed
+## Data exploration summary
 
 The source dataset has 28 columns with mixed types:
 
@@ -29,46 +38,46 @@ Profiling output is written to `code/output/column_profile.csv` with:
 
 ## KPI implementation
 
-1. Number of job postings per category (Top 10):
+1. Number of job postings per category (Top 10)
 - `jobs_posting_top_categories`
 
-2. Salary distribution per category:
+2. Salary distribution per category
 - `salary_distribution_per_category`
 - min, p25, median, p75, max, avg on annualized salary midpoint
 
-3. Correlation between degree requirement and salary:
+3. Correlation between degree requirement and salary
 - `degree_salary_correlation`
 - maps degree requirement to ordinal rank and computes Pearson correlation
 
-4. Highest salary job posting per agency:
+4. Highest salary job posting per agency
 - `highest_salary_job_per_agency`
 - window function with `row_number` by agency
 
-5. Average salary per agency for last 2 years:
+5. Average salary per agency for last 2 years
 - `average_salary_per_agency_last_2_years`
 - cutoff relative to max posting date available in the dataset
 
-6. Highest paid skills:
+6. Highest paid skills
 - `highest_paid_skills`
 - keyword-based skill extraction from job text, aggregated by average salary
 
-## Feature engineering
+## Data processing and feature engineering
 
 Implemented at least 3 techniques:
 
-1. Salary annualization:
+1. Salary annualization
 - Converts annual/daily/hourly salaries to a common annual scale
 
-2. Degree extraction:
+2. Degree extraction
 - Infers `highest_degree_required` and numeric `degree_rank` from text
 
-3. Experience extraction:
+3. Experience extraction
 - Extracts `years_experience_required` from minimum qualifications text
 
-4. Temporal features:
+4. Temporal features
 - `posting_year`, `posting_month`, `posting_quarter`
 
-5. Text combination for skill analysis:
+5. Text combination for skill analysis
 - `combined_text` for skill matching
 
 ## Feature removal logic
@@ -90,6 +99,12 @@ Generated outputs:
 - Charts:
   - `code/output/charts/top_categories.png`
   - `code/output/charts/salary_by_category.png`
+  - `code/output/charts/salary_distribution_box.png`
+  - `code/output/charts/avg_salary_per_agency_last_2_years.png`
+  - `code/output/charts/highest_paid_skills.png`
+  - `code/output/charts/highest_salary_roles.png`
+  - `code/output/charts/degree_salary_correlation.png`
+  - `code/output/visual_report.md`
 
 ## Tests
 
@@ -99,38 +114,46 @@ Unit tests are provided under `code/tests/`:
 - top category KPI correctness (`test_kpis.py`)
 - highest salary per agency KPI correctness (`test_kpis.py`)
 
-## Trigger/automation proposal
+## What I learned during development
+
+1. Data normalization is mandatory before analytics
+Annual, daily, and hourly salary values are not directly comparable. Converting to one annualized metric is the first step to make KPIs meaningful.
+
+2. Text-heavy public datasets need robust rule-based parsing
+Degree and skill inference from free text is possible with practical regex/keyword methods, but results depend on phrase coverage and normalization quality.
+
+3. Spark compatibility details matter in real projects
+Spark 2.4 has constraints (for example, parquet column naming and API differences) that require implementation adjustments for stable execution.
+
+4. Small modular functions improve reliability and maintainability
+Splitting logic into cleaning/features/KPIs/visualization made testing, debugging, and extension much easier than notebook-only code.
+
+5. Visualization improves communication of data engineering outputs
+CSV outputs are technically complete, but chart artifacts make insights easier to review quickly during technical discussion.
+
+## Proposal: Trigger Strategy
 
 Recommended trigger options:
 
-1. Local manual run:
+1. Local manual run
 - `python code/run_pipeline.py`
 
-2. Docker container run (inside `jupyter` or `master`):
-- `python /app/run_pipeline.py --cluster`
+2. Docker container run (assessment environment)
+- `docker exec -it jupyter bash -lc "cd /app && /opt/spark/bin/spark-submit run_pipeline.py"`
 
-3. Scheduled orchestration:
-- Airflow DAG or cron that runs daily/weekly and publishes KPI outputs to an object store or warehouse.
+3. Scheduled orchestration
+- Airflow/Prefect scheduled job (daily/weekly) that runs pipeline and publishes outputs.
 
-## Deployment proposal
+## Proposal: Deployment Steps
 
-For production-style deployment:
+Production-style deployment proposal:
 
-1. Package this code into a Docker image.
-2. Parameterize input/output paths and date windows.
-3. Run via orchestration (Airflow/Prefect).
-4. Persist final datasets to S3/ADLS and KPIs to analytics DB.
-5. Add data quality checks and alerting.
-
-## Assumptions and considerations
-
-- Salary annualization factors:
-  - annual: 1
-  - daily: 260 workdays/year
-  - hourly: 2080 hours/year
-- Skill extraction is keyword-based and can be improved with NLP/entity extraction.
-- Degree and experience extraction are rule-based and may miss edge phrasing.
-- Correlation result should be interpreted directionally (not causal).
+1. Containerize pipeline as a dedicated runtime image.
+2. Externalize configuration (input/output path, schedule, retention).
+3. Orchestrate with Airflow/Prefect/Kubernetes CronJob.
+4. Persist processed data and KPI outputs to cloud storage/warehouse.
+5. Add data quality checks, logging, monitoring, and alerting.
+6. Add CI checks for tests and style before deployment.
 
 ## Challenges and learnings
 

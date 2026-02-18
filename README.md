@@ -100,6 +100,7 @@ Implemented solution files:
 - `code/run_pipeline.py`: pipeline entrypoint
 - `code/tests/`: unit tests
 - `MyDocument.md`: assumptions, challenges, KPI/feature engineering details
+- `docs/DevelopmentSteps.md`: step-by-step development journey
 
 ### Quick run
 
