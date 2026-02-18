@@ -1,4 +1,3 @@
-code/output/
 code/.pytest_cache/
 code/**/__pycache__/
 *.pyc

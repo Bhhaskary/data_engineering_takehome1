@@ -1,0 +1,29 @@
+column_name,data_type,row_count,non_null_count,null_count,distinct_count
+Job ID,string,2946,2946,0,1661
+Agency,string,2946,2946,0,52
+Posting Type,string,2946,2946,0,2
+# Of Positions,string,2946,2946,0,34
+Business Title,string,2946,2946,0,1244
+Civil Service Title,string,2946,2946,0,312
+Title Code No,string,2946,2946,0,323
+Level,string,2946,2946,0,14
+Job Category,string,2946,2944,2,131
+Full-Time/Part-Time indicator,string,2946,2751,195,3
+Salary Range From,string,2946,2946,0,519
+Salary Range To,string,2946,2946,0,658
+Salary Frequency,string,2946,2946,0,3
+Work Location,string,2946,2946,0,226
+Division/Work Unit,string,2946,2946,0,678
+Job Description,string,2946,2946,0,1603
+Minimum Qual Requirements,string,2946,2928,18,348
+Preferred Skills,string,2946,2687,259,714
+Additional Information,string,2946,2383,563,595
+To Apply,string,2946,2766,180,745
+Hours/Shift,string,2946,1884,1062,525
+Work Location 1,string,2946,1808,1138,494
+Recruitment Contact,string,2946,1183,1763,359
+Residency Requirement,string,2946,2268,678,290
+Posting Date,string,2946,2429,517,579
+Post Until,string,2946,1447,1499,348
+Posting Updated,string,2946,2438,508,519
+Process Date,string,2946,2521,425,278
